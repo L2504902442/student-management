@@ -33,7 +33,7 @@ public class StudentController {
         return converter.convertStudentDetails(students, studentsCourses);
     }
 
-    @GetMapping("/studentsCoursesList")
+    @GetMapping("/StudentsCoursesList")
     public List<StudentsCourses> getStudentsCoursesList() {
         return service.searchStudentsCoursesList();
     }
