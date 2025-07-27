@@ -1,11 +1,12 @@
 package raisetech.student.management.data;
 
-import  lombok.Getter;
-import  lombok.Setter;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
 public class StudentsCourses {
+
     private String courseId;
     private int studentId;
     private String courseName;
