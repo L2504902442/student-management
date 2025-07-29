@@ -1,6 +1,5 @@
 package raisetech.student.management.data;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class Student {
 
-    private  String id;
+    private  Integer id;
     private  String name;
     private  String kanaName;
     private  String nickname;
@@ -16,4 +15,6 @@ public class Student {
     private  String area;
     private  int age;
     private  String sex;
+    private  String remark;
+    private  boolean isDeleted;
 }
