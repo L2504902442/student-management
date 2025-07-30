@@ -13,8 +13,5 @@ public interface StudentRepository {
     List<Student> search();
 
     @Select("SELECT * FROM students_courses")
-    List<StudentsCourses> searchStudentsCourses();
-
-    @Select("SELECT * FROM students_courses WHERE course_name LIKE '%Java基礎%'")
     List<StudentsCourses> searchStudentsCourseList();
 }
