@@ -23,6 +23,9 @@ public class StudentConverter {
                     .collect(Collectors.toList());
 
             studentDetail.setStudentsCourses(convertStudentCourses);
+
+            studentDetail.setRemark(student.getRemark());
+            studentDetail.setDeleted(student.isDeleted());
             studentDetails.add(studentDetail);
         });
         return studentDetails;
