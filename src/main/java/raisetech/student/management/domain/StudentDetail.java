@@ -12,4 +12,6 @@ public class StudentDetail {
 
     private Student student;
     private List<StudentsCourses> studentsCourses;
+    private String remark;
+    private boolean isDeleted;
 }
