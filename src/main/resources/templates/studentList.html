@@ -22,48 +22,52 @@
     </thead>
     <tbody>
     <tr th:each="studentDetail : ${studentList}">
-      <td th:text="${studentDetail.student.id}">1</td>
-       <td th:text="${studentDetail.student.name}">伊東 剛</td>
-       <td th:text="${studentDetail.student.kanaName}">イトウツヨシ</td>
-       <td th:text="${studentDetail.student.nickname}">つよぽん</td>
-       <td th:text="${studentDetail.student.email}">tsuyoshi@example.com</td>
-       <td th:text="${studentDetail.student.area}">東京</td>
-       <td th:text="${studentDetail.student.age}">36</td>
-       <td th:text="${studentDetail.student.gender}">男</td>
-       <td th:text="${studentDetail.student.remark}">特になし</td>
+      <td th:text="${studentDetail.student.studentId}">1</td>
+      <td th:text="${studentDetail.student.name}">伊東 剛</td>
+      <td th:text="${studentDetail.student.kanaName}">いとうつよし</td>
+      <td th:text="${studentDetail.student.nickname}">つよぽん</td>
+      <td th:text="${studentDetail.student.email}">tsuyoshi@example.com</td>
+      <td th:text="${studentDetail.student.area}">東京都</td>
+      <td th:text="${studentDetail.student.age}">36</td>
+      <td th:text="${studentDetail.student.gender}">男</td>
+      <td th:text="${studentDetail.student.remark}">特になし</td>
+
     </tr>
     <tr th:each="studentDetail : ${studentList}">
-        <td th:text="${studentDetail.student.id}">2</td>
+        <td th:text="${studentDetail.student.studentId}">2</td>
         <td th:text="${studentDetail.student.name}">筒井 あやめ</td>
-        <td th:text="${studentDetail.student.kanaName}">ツツイアヤメ</td>
+        <td th:text="${studentDetail.student.kanaName}">つついあやめ</td>
         <td th:text="${studentDetail.student.nickname}">あやめん</td>
         <td th:text="${studentDetail.student.email}">ayame@example.com</td>
-        <td th:text="${studentDetail.student.area}">愛知</td>
+        <td th:text="${studentDetail.student.area}">愛知県</td>
         <td th:text="${studentDetail.student.age}">21</td>
         <td th:text="${studentDetail.student.gender}">女</td>
         <td th:text="${studentDetail.student.remark}">特になし</td>
+
     </tr>
     <tr th:each="studentDetail : ${studentList}">
-        <td th:text="${studentDetail.student.id}">3</td>
+        <td th:text="${studentDetail.student.studentId}">3</td>
         <td th:text="${studentDetail.student.name}">遠藤 さくら</td>
-        <td th:text="${studentDetail.student.kanaName}">エンドウサクラ</td>
+        <td th:text="${studentDetail.student.kanaName}">えんどうさくら</td>
         <td th:text="${studentDetail.student.nickname}">さくちゃん</td>
         <td th:text="${studentDetail.student.email}">sakura@example.com</td>
-        <td th:text="${studentDetail.student.area}">愛知</td>
-        <td th:text="${studentDetail.student.age}">24</td>
+        <td th:text="${studentDetail.student.area}">愛知県</td>
+        <td th:text="${studentDetail.student.age}">23</td>
         <td th:text="${studentDetail.student.gender}">女</td>
         <td th:text="${studentDetail.student.remark}">特になし</td>
+
     </tr>
     <tr th:each="studentDetail : ${studentList}">
-        <td th:text="${studentDetail.student.id}">4</td>
+        <td th:text="${studentDetail.student.studentId}">4</td>
         <td th:text="${studentDetail.student.name}">小川 彩</td>
-        <td th:text="${studentDetail.student.kanaName}">オガワアヤ</td>
+        <td th:text="${studentDetail.student.kanaName}">おがわあや</td>
         <td th:text="${studentDetail.student.nickname}">あーや</td>
         <td th:text="${studentDetail.student.email}">aya@example.com</td>
-        <td th:text="${studentDetail.student.area}">千葉</td>
+        <td th:text="${studentDetail.student.area}">千葉県</td>
         <td th:text="${studentDetail.student.age}">18</td>
         <td th:text="${studentDetail.student.gender}">女</td>
         <td th:text="${studentDetail.student.remark}">特になし</td>
+
     </tr>
     </tbody>
 </table>
