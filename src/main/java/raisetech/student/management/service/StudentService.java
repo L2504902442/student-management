@@ -1,6 +1,8 @@
 package raisetech.student.management.service;
 
 import java.util.List;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,12 +18,10 @@ public class StudentService {
 
     @Autowired
     public StudentService(StudentRepository repository) {
-
         this.repository = repository;
     }
 
     public List<Student> searchStudentList() {
-
         return repository.searchStudents();
     }
 
@@ -30,7 +30,9 @@ public class StudentService {
     }
 
     @Transactional
-    public void registerStudent(StudentDetail studentDetail){
-       repository.registerStudent(studentDetail.getStudent());
+    public void registerStudent(StudentDetail studentDetail) {
+        Student student = studentDetail.getStudent();
+        student.setStudentId(UUID.randomUUID().toString());
+       repository.registerStudent(student);
     }
 }
