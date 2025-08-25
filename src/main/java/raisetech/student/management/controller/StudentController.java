@@ -54,7 +54,7 @@ public class StudentController {
 
         service.registerStudent(studentDetail);
 
-        System.out.println( studentDetail.getStudent().getName() + "さんが新規受講生として登録されました。");
+        System.out.println(studentDetail.getStudent().getName() + "さんが新規受講生として登録されました。");
            return "redirect:/studentList";
     }
 
