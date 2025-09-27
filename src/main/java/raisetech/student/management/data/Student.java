@@ -18,4 +18,15 @@ public class Student {
     private  String gender;
     private  String remark;
     private  boolean isDeleted;
+
+    private String id;
+
+    public String getId() {
+        return studentId; // id の getter では studentId を返す
+    }
+
+    public void setId(String id) {
+        this.studentId = id; // setter も studentId に値を入れる
+    }
 }
+

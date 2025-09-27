@@ -1,27 +1,42 @@
 package raisetech.student.management.repository;
 
 import java.util.List;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+
+import org.apache.ibatis.annotations.*;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentsCourses;
 
 @Mapper
 public interface StudentRepository {
 
-    @Insert("INSERT INTO students (name,kana_name,nickname,e_mail,area,age,gender,remark,isDeleted) " +
-            "VALUES(#{name},#{kanaName},#{nickname},#{email},#{area},#{age},#{gender},#{remark},false)")
-    @Options(useGeneratedKeys = true, keyProperty = "studentId")
-    void registerStudent(Student student);
-
     @Select("SELECT * FROM students")
     List<Student> searchStudents();
 
-    @Select("SELECT * FROM students_courses")
-    List<StudentsCourses> searchStudentsCourses();
+    @Select("SELECT * FROM students WHERE id = #{id}")
+    Student searchStudent(String id);
 
+    @Select("SELECT * FROM students_courses")
+    List<StudentsCourses> searchStudentsCoursesList();
+
+    @Select("SELECT * FROM students_courses WHERE student_Id = #{studentId}")
+    List<StudentsCourses> searchStudentsCourses(String studentId);
+
+    @Insert("INSERT INTO students (name,kana_name,nickname,e_mail,area,age,gender,remark,isDeleted) "
+            + "VALUES(#{name},#{kanaName},#{nickname},#{email},#{area},#{age},#{gender},#{remark},false)")
+    @Options(useGeneratedKeys = true, keyProperty = "studentId")
+    void registerStudent(Student student);
+
+    @Insert("INSERT INTO students_courses(student_Id, course_Name, start_date, end_date) "
+            + "VALUES(#{studentId}, #{courseName}, #{startDate}, #{endDate})")
+    @Options(useGeneratedKeys = true, keyProperty = "courseId")
+    void registerStudentsCourses(StudentsCourses studentsCourses);
+
+    @Update("UPDATE students SET name = #{name}, kana_name = #{kanaName}, nickname = #{nickname},"
+    +"e_mail = #{email}, area = #{area}, age = #{age}, gender = #{gender}, remark = #{remark}, isDeleted = #{isDeleted} WHERE id = #{id} ")
+    void updateStudent(Student student);
+
+    @Update("UPDATE students_courses SET courseName = #{courseName} WHERE id = #{id}")
+    void updateStudentsCourses(StudentsCourses studentsCourses);
 
 
 }
