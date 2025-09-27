@@ -1,8 +1,7 @@
 package raisetech.student.management.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,14 +24,40 @@ public class StudentService {
         return repository.searchStudents();
     }
 
+    public StudentDetail searchStudent(String Id){
+        Student student = repository.searchStudent(Id);
+        List<StudentsCourses> studentsCourses = repository.searchStudentsCourses(student.getStudentId());
+        StudentDetail studentDetail = new StudentDetail();
+        studentDetail.setStudent(student);
+        studentDetail.setStudentsCourses(studentsCourses);
+        return studentDetail;
+
+    }
+
     public List<StudentsCourses> searchStudentsCourseList() {
-        return repository.searchStudentsCourses();
+        return repository.searchStudentsCoursesList();
     }
 
     @Transactional
     public void registerStudent(StudentDetail studentDetail) {
-        Student student = studentDetail.getStudent();
-        student.setStudentId(UUID.randomUUID().toString());
-       repository.registerStudent(student);
+
+        repository.registerStudent(studentDetail.getStudent());
+        for (StudentsCourses studentsCourse : studentDetail.getStudentsCourses()) {
+            studentsCourse.setStudentId(studentDetail.getStudent().getStudentId());
+            studentsCourse.setStartDate(LocalDateTime.now());
+            studentsCourse.setEndDate(LocalDateTime.now().plusYears(1));
+            repository.registerStudentsCourses(studentsCourse);
+
+        }
     }
+
+    @Transactional
+    public void updateStudent(StudentDetail studentDetail) {
+        repository.updateStudent(studentDetail.getStudent());
+        for (StudentsCourses studentsCourses : studentDetail.getStudentsCourses()) {
+            repository.updateStudentsCourses(studentsCourses);
+
+        }
+    }
+
 }
