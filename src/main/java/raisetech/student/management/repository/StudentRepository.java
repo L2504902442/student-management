@@ -12,8 +12,8 @@ public interface StudentRepository {
     @Select("SELECT * FROM students")
     List<Student> searchStudents();
 
-    @Select("SELECT * FROM students WHERE id = #{id}")
-    Student searchStudent(String id);
+    @Select("SELECT * FROM students WHERE studentId = #{studentId}")
+    Student searchStudent(String studentId);
 
     @Select("SELECT * FROM students_courses")
     List<StudentsCourses> searchStudentsCoursesList();
@@ -32,10 +32,10 @@ public interface StudentRepository {
     void registerStudentsCourses(StudentsCourses studentsCourses);
 
     @Update("UPDATE students SET name = #{name}, kana_name = #{kanaName}, nickname = #{nickname},"
-    +"e_mail = #{email}, area = #{area}, age = #{age}, gender = #{gender}, remark = #{remark}, isDeleted = #{isDeleted} WHERE id = #{id} ")
+    +"e_mail = #{email}, area = #{area}, age = #{age}, gender = #{gender}, remark = #{remark}, isDeleted = #{isDeleted} WHERE student_id = #{id} ")
     void updateStudent(Student student);
 
-    @Update("UPDATE students_courses SET courseName = #{courseName} WHERE id = #{id}")
+    @Update("UPDATE students_courses SET courseName = #{courseName} WHERE student_id = #{id}")
     void updateStudentsCourses(StudentsCourses studentsCourses);
 
 

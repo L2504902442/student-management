@@ -36,9 +36,9 @@ public class StudentController {
         return "studentList";
     }
 
-    @GetMapping("/student/{id}")
-    public String getStudent(@PathVariable String Id, Model model) {
-        StudentDetail studentDetail = service.searchStudent(Id);
+    @GetMapping("/student/{studentId}")
+    public String getStudent(@PathVariable("studentId") String studentId, Model model) {
+        StudentDetail studentDetail = service.searchStudent(studentId);
         model.addAttribute("studentDetail", studentDetail);
         return "updateStudent";
 
@@ -47,7 +47,6 @@ public class StudentController {
     @GetMapping("/newStudent")
     public String newStudent(Model model) {
       StudentDetail studentDetail = new StudentDetail();
-      studentDetail.setStudent(new Student());
       studentDetail.setStudentsCourses(Arrays.asList(new StudentsCourses()));
       model.addAttribute("studentDetail", studentDetail);
       return "registerStudent";
