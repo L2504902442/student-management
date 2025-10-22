@@ -40,7 +40,6 @@ public class StudentService {
 
     @Transactional
     public void registerStudent(StudentDetail studentDetail) {
-
         repository.registerStudent(studentDetail.getStudent());
         for (StudentsCourses studentsCourse : studentDetail.getStudentsCourses()) {
             studentsCourse.setStudentId(studentDetail.getStudent().getStudentId());
@@ -54,9 +53,9 @@ public class StudentService {
     @Transactional
     public void updateStudent(StudentDetail studentDetail) {
         repository.updateStudent(studentDetail.getStudent());
-        for (StudentsCourses studentsCourses : studentDetail.getStudentsCourses()) {
-            studentsCourses.setStudentId(studentDetail.getStudent().getStudentId());
-            repository.updateStudentsCourses(studentsCourses);
+        for (StudentsCourses studentsCourse : studentDetail.getStudentsCourses()) {
+            studentsCourse.setStudentId(studentDetail.getStudent().getStudentId());
+            repository.updateStudentsCourses(studentsCourse);
 
         }
     }
