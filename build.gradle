@@ -12,11 +12,12 @@ java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
 	}
-}
+
 
 configurations {
-	compileOnly{
+	compileOnly {
 		extendsFrom annotationProcessor
+	   }
 	}
 }
 
@@ -30,7 +31,7 @@ dependencies {
 
     //Thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.5.0'
-
+	//Validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     //便利機能、ユーティリティ
@@ -44,7 +45,6 @@ dependencies {
 
     //MyBatis
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
-
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
