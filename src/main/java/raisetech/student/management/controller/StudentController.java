@@ -1,12 +1,15 @@
 package raisetech.student.management.controller;
 
-import jakarta.validation.constraints.Size;
+import jakarta.validation.Valid;
 import java.util.List;
+import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import raisetech.student.management.domain.StudentDetail;
+import raisetech.student.management.exception.TestException;
 import raisetech.student.management.service.StudentService;
 
 /**
@@ -36,8 +39,9 @@ public class StudentController {
      */
 
     @GetMapping("/studentList")
-    public List<StudentDetail>getStudentList() {
-      return service.searchStudentList();
+    public List<StudentDetail>getStudentList() throws  TestException {
+      throw new TestException(
+          "現在のこのAPIは利用出来ません。URLは「studentList」 ではなく「students」を利用してください。");
     }
 
     /**
@@ -49,8 +53,8 @@ public class StudentController {
      */
 
     @GetMapping("/student/{studentId}")
-    public StudentDetail getStudent(@PathVariable @Size(min=1, max=3) String studentId)
-    {
+    public StudentDetail getStudent(
+            @PathVariable @Size(min = 1,max = 3) String studentId) {
        return service.searchStudent(studentId);
     }
 
@@ -62,7 +66,8 @@ public class StudentController {
      */
 
     @PostMapping("/registerStudent")
-    public ResponseEntity<StudentDetail> registerStudent(@RequestBody StudentDetail studentDetail) {
+    public ResponseEntity<StudentDetail> registerStudent(
+            @RequestBody @Valid StudentDetail studentDetail) {
         StudentDetail responseStudentDetail = service.registerStudent(studentDetail);
         return ResponseEntity.ok(responseStudentDetail);
     }
@@ -77,5 +82,10 @@ public class StudentController {
     public ResponseEntity<String> updateStudent(@RequestBody StudentDetail studentDetail) {
         service.updateStudent(studentDetail);
         return ResponseEntity.ok("更新処理が成功しました。");
+    }
+
+    @ExceptionHandler(TestException.class)
+    public  ResponseEntity<String> handleTestException(TestException ex) {
+       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }
