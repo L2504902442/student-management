@@ -1,5 +1,6 @@
 package raisetech.student.management.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import java.util.List;
 import jakarta.validation.constraints.Size;
@@ -37,11 +38,10 @@ public class StudentController {
      *
      * @return　受講生詳細一覧(全件)
      */
-
+    @Operation(summary = "一覧検索", description = "受講生の一覧を検索します。")
     @GetMapping("/studentList")
-    public List<StudentDetail>getStudentList() throws  TestException {
-      throw new TestException(
-          "現在のこのAPIは利用出来ません。URLは「studentList」 ではなく「students」を利用してください。");
+    public List<StudentDetail>getStudentList() {
+        return service.searchStudentList();
     }
 
     /**
@@ -64,7 +64,7 @@ public class StudentController {
      * @param studentDetail　受講生詳細
      * @return　実行結果
      */
-
+    @Operation(summary = "受講生登録", description = "受講生を登録します。")
     @PostMapping("/registerStudent")
     public ResponseEntity<StudentDetail> registerStudent(
             @RequestBody @Valid StudentDetail studentDetail) {
