@@ -3,7 +3,9 @@ package raisetech.student.management.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import java.util.List;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +22,7 @@ import raisetech.student.management.service.StudentService;
 @RestController
 public class StudentController {
 
-    private  StudentService service;
+    private final StudentService service;
 
     /**
      * コンストラクタ
@@ -29,7 +31,7 @@ public class StudentController {
      */
     @Autowired
     public StudentController(StudentService service) {
-        this.service = service;
+      this.service = service;
     }
 
     /**
@@ -38,10 +40,10 @@ public class StudentController {
      *
      * @return　受講生詳細一覧(全件)
      */
-    @Operation(summary = "一覧検索", description = "受講生の一覧を検索します。")
+    @Operation(summary = "受講生一覧検索", description = "受講生の一覧を検索します。")
     @GetMapping("/studentList")
     public List<StudentDetail>getStudentList() {
-        return service.searchStudentList();
+      return service.searchStudentList();
     }
 
     /**
@@ -52,9 +54,10 @@ public class StudentController {
      * @return　受講生
      */
 
+    @Operation(summary = "受講生詳細検索", description = "IDに紐づく任意の受講生を検索します。")
     @GetMapping("/student/{studentId}")
     public StudentDetail getStudent(
-            @PathVariable @Size(min = 1,max = 3) String studentId) {
+            @PathVariable @NotBlank @Pattern(regexp = "^\\d+$") String studentId) {
        return service.searchStudent(studentId);
     }
 
@@ -78,10 +81,16 @@ public class StudentController {
      * @param studentDetail　受講生詳細
      * @return　実行結果
      */
+    @Operation(summary = "受講生更新", description = "受講生を更新します。")
     @PutMapping("/updateStudent")
-    public ResponseEntity<String> updateStudent(@RequestBody StudentDetail studentDetail) {
+    public ResponseEntity<String> updateStudent(@RequestBody @Valid StudentDetail studentDetail) {
         service.updateStudent(studentDetail);
         return ResponseEntity.ok("更新処理が成功しました。");
+    }
+
+    @GetMapping("/exception")
+    public ResponseEntity<String> throwException() throws NotFoundException {
+        throw new NotFoundException("このAPIは現在利用できません。古いURLとなっています。");
     }
 
     @ExceptionHandler(TestException.class)
