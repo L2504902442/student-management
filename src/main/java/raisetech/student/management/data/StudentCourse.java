@@ -12,6 +12,8 @@ import lombok.Setter;
 @Schema(description = "受講生コース情報")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 
 public class StudentCourse {
 
@@ -21,8 +23,8 @@ public class StudentCourse {
     @Pattern(regexp = "^\\d+$", message = "数字のみ入力するようにしてください。")
     private String studentId;
 
+    @NotBlank(message = "コース名は必須です")
     private String courseName;
-
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 }

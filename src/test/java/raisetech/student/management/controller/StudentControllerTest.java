@@ -69,8 +69,9 @@ class StudentControllerTest {
                        }
                       ]
                      }        
-                    """
-    )).andExpect(status().isOk());
+            """
+    ))
+    .andExpect(status().isOk());
 
     verify(service, times(1)).registerStudent(any());
   }
