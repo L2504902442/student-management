@@ -5,12 +5,12 @@
 
     <!-- 受講生の全件検索　-->
     <select id="search" resultType="raisetech.student.management.data.Student">
-      SELECT * FROM students;
+      SELECT * FROM students WHERE is_deleted = false
     </select>
 
     <!-- 受講生の検索　-->
     <select id="searchStudent" resultType="raisetech.student.management.data.Student">
-        SELECT * FROM students WHERE Student_id = #{studentId};
+        SELECT * FROM students WHERE student_id = #{studentId};
     </select>
 
     <!--受講生コース情報の全件検索-->
@@ -26,15 +26,15 @@
     <!--受講生の新規登録-->
     <insert id="registerStudent" parameterType="raisetech.student.management.data.Student"
       useGeneratedKeys="true" keyProperty="studentId">
-      INSERT INTO students (name, kana_name, nickname, e_mail, area, age, gender, remark, isDeleted)
-      VALUES (#{name}, #{kanaName}, #{nickname}, #{email}, #{area}, #{age}, #{gender}, #{remark}, false);
+      INSERT INTO students (name, kana_name, nickname, email, area, age, gender, remark, is_deleted)
+      VALUES (#{name}, #{kanaName}, #{nickname}, #{email}, #{area}, #{age}, #{gender}, #{remark}, #{deleted})
     </insert>
 
     <!--受講生コース情報の新規登録-->
     <insert id="registerStudentCourse" parameterType="raisetech.student.management.data.StudentCourse"
       useGeneratedKeys="true" keyProperty="courseId">
-      INSERT INTO students_courses (student_id, course_name, start_Date, end_Date)
-      VALUES (#{studentId},#{courseName},#{startDate},#{endDate});
+      INSERT INTO students_courses (student_id, course_name, start_date, end_date)
+      VALUES (#{studentId},#{courseName},#{startDate},#{endDate})
     </insert>
 
     <!--学生情報を更新する-->
@@ -44,19 +44,19 @@
           name = #{name},
           kana_name = #{kanaName},
           nickname = #{nickname},
-          e_mail = #{email},
+          email = #{email},
           area = #{area},
           age = #{age},
           gender = #{gender},
           remark = #{remark},
-          isDeleted = #{isDeleted}
-        WHERE Student_id = #{studentId}
+          is_deleted = #{isDeleted}
+        WHERE student_id = #{studentId}
     </update>
 
     <!--受講生コース情報のコース名を更新-->
     <update id="updateStudentCourse" parameterType="raisetech.student.management.data.StudentCourse">
       UPDATE students_courses
-      SET course_name = #{courseName},
+      SET course_name = #{courseName}
       WHERE course_id = #{courseId}
     </update>
 
