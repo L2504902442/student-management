@@ -13,7 +13,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 
 @MybatisTest
@@ -133,7 +133,7 @@ class StudentRepositoryTest {
         student.setStudentId("9999");
         student.setName("名無し");
 
-        sut.updateStudent(student);
+       assertDoesNotThrow(() -> sut.updateStudent(student));
     }
 
 
@@ -155,7 +155,7 @@ class StudentRepositoryTest {
         course.setStudentId("1");
         course.setCourseName("子育てセミナー");
 
-        sut.updateStudentCourse(course);
+        assertDoesNotThrow(() -> sut.updateStudentCourse(course));
     }
 
 }
