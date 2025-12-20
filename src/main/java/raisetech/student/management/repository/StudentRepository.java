@@ -79,8 +79,4 @@ public interface StudentRepository {
      */
 
     void updateStudentCourse(StudentCourse studentCourse);
-
-    Object findStudentById(int studentId);
-
-    Object findCourseByStudentId(int studentId);
 }
