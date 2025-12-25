@@ -2,11 +2,13 @@ package raisetech.student.management.controller.converter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
+
 
 /**
  * 受講生詳細を受講生や受講生コース情報、もしくはその逆の変換を行うコンバーターです。
@@ -32,7 +34,7 @@ public class StudentConverter {
             studentDetail.setStudent(student);
 
             List<StudentCourse> convertStudentCourseList = studentCourseList.stream()
-                    .filter(studentCourse ->  student.getStudentId().equals(studentCourse.getStudentId()))
+                    .filter(studentCourse -> Objects.equals(student.getStudentId(), studentCourse.getStudentId()))
                     .collect(Collectors.toList());
 
             studentDetail.setStudentCourseList(convertStudentCourseList);

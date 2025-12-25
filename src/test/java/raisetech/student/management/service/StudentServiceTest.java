@@ -1,6 +1,6 @@
 package raisetech.student.management.service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -80,15 +80,13 @@ class StudentServiceTest {
     @Test
     void 受講生詳細の登録_初期化処理が行われること() {
       String studentId = "777";
-      Student student = new Student();
-      student.setStudentId(studentId);
       StudentCourse studentCourse = new StudentCourse();
 
-      sut.initStudentsCourse(studentCourse, student.getStudentId());
+      sut.initStudentsCourse(studentCourse, studentId);
 
       assertEquals(studentId, studentCourse.getStudentId());
-      assertEquals(LocalDateTime.now().getHour(), studentCourse.getStartDate().getHour());
-      assertEquals(LocalDateTime.now().plusYears(1).getYear(), studentCourse.getEndDate().getYear());
+      assertEquals(LocalDate.now(), studentCourse.getStartDate());
+      assertEquals(LocalDate.now().plusYears(1), studentCourse.getExpectedCompletionDate());
     }
 
     @Test

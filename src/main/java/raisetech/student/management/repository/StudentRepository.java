@@ -4,6 +4,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.*;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
+import raisetech.student.management.domain.CourseDetail;
 
 /**
  * 受講生テーブルと受講生コース情報テーブルと紐づくRepositoryです。
@@ -47,6 +48,9 @@ public interface StudentRepository {
      */
 
     List<StudentCourse> searchStudentCourse(String studentId);
+
+    //受講生IDに紐づくコース詳細検索
+    List<CourseDetail> searchCourseDetailsByStudentId(String studentId);
 
     /**
      * 受講生を新規登録します。 IDに関しては自動採番を行う。

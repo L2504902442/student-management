@@ -8,7 +8,7 @@ import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -90,11 +90,11 @@ class StudentRepositoryTest {
 
   @Test
   void 受講生コース情報の新規登録が行えること() {
-      LocalDateTime startDate = LocalDateTime.now();
-      LocalDateTime endDate = startDate.plusYears(1);
+      LocalDate startDate = LocalDate.now();
+      LocalDate expectedCompletionDate = startDate.plusYears(1);
 
       StudentCourse studentCourse = new StudentCourse(
-          null,"1", "Python入門", startDate, endDate
+          null,"1", "Python入門", startDate, expectedCompletionDate
       );
 
       sut.registerStudentCourse(studentCourse);
@@ -109,8 +109,8 @@ class StudentRepositoryTest {
         StudentCourse course = new StudentCourse();
         course.setStudentId("");
         course.setCourseName("Java");
-        course.setStartDate(LocalDateTime.now());
-        course.setEndDate(LocalDateTime.now().plusMonths(6));
+        course.setStartDate(LocalDate.now());
+        course.setExpectedCompletionDate(LocalDate.now().plusMonths(6));
 
         assertThatThrownBy(() -> sut.registerStudentCourse(course))
                 .isInstanceOf(DataIntegrityViolationException.class)
