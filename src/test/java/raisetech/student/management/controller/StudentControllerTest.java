@@ -10,13 +10,21 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.BDDAssertions.and;
+import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
+import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.service.StudentService;
-import java.time.LocalDateTime;
+
+import java.time.LocalDate;
+
+import java.util.List;
 import java.util.Set;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -34,18 +42,58 @@ class StudentControllerTest {
   @Test
   void 受講生詳細の一覧検索が実行できて空のリストが返ってくること() throws Exception {
     mockMvc.perform(get("/studentList"))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andExpect(content().json("[]"));
 
     verify(service, times(1)).searchStudentList();
   }
 
   @Test
-  void 受講生詳細の単一検索が実行できて対象となる受講生のリストが返ってくること() throws Exception {
-    String studentId = "1";
-    mockMvc.perform(get("/student/{studentId}", studentId))
+  void 受講生詳細の検索ができてIDに紐づく受講生詳細が返ってくること() throws Exception {
+    String id = "100";
+    Student student = new Student(id, "渡辺　恵子", "わたなべ　けいこ", "けいこ",
+            "unique.user1937@example.com", "東京都", 30, "女", "特になし", false);
+    StudentCourse studentCourse = new StudentCourse("100", id, "JAVAコース",
+            LocalDate.parse("2024-01-01"), LocalDate.parse("2024-04-01"));
+    StudentDetail studentDetail = new StudentDetail(student, List.of(studentCourse));
+    when(service.searchStudent(id)).thenReturn(studentDetail);
+    mockMvc.perform(get("/student/{id}", id))
+            .andExpect(status().isOk())
+            .andExpect(content().json("""
+            {
+              "student":{
+                "id":"100",
+                "fullName":"渡辺　恵子",
+                "furigana":"わたなべ　けいこ",
+                "nickname":"けいこ",
+                "emailAddress":"unique.user1937@example.com",
+                "area":"東京都",
+                "age":30,
+                "sex":"女",
+                "remark":"特になし",
+                "deleted":false
+              },
+              "studentCourseList":[
+                {
+                  "id":"100",
+                  "studentId":"100",
+                  "course":"JAVAコース",
+                  "startDate":"2024-01-01",
+                  "expectedCompletionDate":"2024-04-01"
+                }
+              ]
+            }
+            """));
+    verify(service, times(1)).searchStudent(id);
+  }
+
+  @Test
+  void 受講生コース詳細の検索ができて空で返ってくること() throws Exception {
+    String id = "100";
+    mockMvc.perform(get("/course/{courseId}", id))
             .andExpect(status().isOk());
 
-    verify(service, times(1)).searchStudent(studentId);
+    verify(service, times(1)).searchCourseByStudentId(id);
   }
 
   @Test
@@ -69,8 +117,7 @@ class StudentControllerTest {
                        }
                       ]
                      }        
-            """
-    ))
+            """))
     .andExpect(status().isOk());
 
     verify(service, times(1)).registerStudent(any());
@@ -97,8 +144,9 @@ class StudentControllerTest {
                         }
                        ]
                       }       
-                    """
-    )).andExpect(status().isOk());
+                    """))
+            .andExpect(status().isOk())
+            .andExpect (content().string("更新処理が成功しました。"));
 
     verify(service, times(1)).updateStudent(any());
   }
@@ -144,8 +192,6 @@ class StudentControllerTest {
     studentCourse.setCourseId("1");
     studentCourse.setStudentId("1");
     studentCourse.setCourseName("Java基礎");
-    studentCourse.setStartDate(LocalDateTime.now());
-    studentCourse.setEndDate(LocalDateTime.now().plusYears(1));
 
     Set<ConstraintViolation<StudentCourse>> violations = validator.validate(studentCourse);
 
@@ -158,14 +204,14 @@ class StudentControllerTest {
     studentCourse.setCourseId("テストです。");
     studentCourse.setStudentId("1");
     studentCourse.setCourseName("Java基礎");
-    studentCourse.setStartDate(LocalDateTime.now());
-    studentCourse.setEndDate(LocalDateTime.now().plusYears(1));
-
     Set<ConstraintViolation<StudentCourse>> violations = validator.validate(studentCourse);
 
     assertThat(violations.size()).isEqualTo(1);
-    assertThat(violations).extracting("message")
-            .containsOnly("数字のみ入力するようにしてください。");
-
+    assertThat(violations).extracting(v -> v.getPropertyPath().toString(),
+            ConstraintViolation::getMessage)
+            .containsOnly(
+                    tuple("courseId", "数字のみ入力するようにしてください。"),
+                    tuple("studentId", "数字のみ入力するようにしてください。")
+            );
   }
 }

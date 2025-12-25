@@ -5,7 +5,7 @@
 
     <!-- 受講生の全件検索　-->
     <select id="search" resultType="raisetech.student.management.data.Student">
-      SELECT * FROM students WHERE is_deleted = false
+      SELECT * FROM students
     </select>
 
     <!-- 受講生の検索　-->
@@ -23,11 +23,26 @@
       SELECT * FROM students_courses WHERE student_id = #{studentId};
     </select>
 
+    <!-- 受講生IDで受講コース詳細の検索　-->
+    <select id="searchCourseDetailsByStudentId" parameterType="String" resultType="raisetech.studentManagement.domain.CourseDetail">
+        SELECT
+        sc. id AS courseId,
+        sc.student_id,
+        sc.courseName,
+        sc.start_date,
+        sc.end_date,
+        as_table.id AS applicationStatusId,
+        as_table.application_status
+        FROM students_courses sc
+        JOIN application_status as_table ON sc.id = as_table.course_id
+        WHERE sc.student_id = #{studentId};
+    </select>
+
     <!--受講生の新規登録-->
     <insert id="registerStudent" parameterType="raisetech.student.management.data.Student"
       useGeneratedKeys="true" keyProperty="studentId">
       INSERT INTO students (name, kana_name, nickname, email, area, age, gender, remark, is_deleted)
-      VALUES (#{name}, #{kanaName}, #{nickname}, #{email}, #{area}, #{age}, #{gender}, #{remark}, #{deleted})
+      VALUES (#{name}, #{kanaName}, #{nickname}, #{email}, #{area}, #{age}, #{gender}, #{remark}, false)
     </insert>
 
     <!--受講生コース情報の新規登録-->
@@ -59,5 +74,4 @@
       SET course_name = #{courseName}
       WHERE course_id = #{courseId}
     </update>
-
 </mapper>

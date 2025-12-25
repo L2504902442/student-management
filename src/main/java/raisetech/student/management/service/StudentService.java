@@ -1,6 +1,6 @@
 package raisetech.student.management.service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import raisetech.student.management.controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
+import raisetech.student.management.domain.CourseDetail;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.repository.StudentRepository;
 
@@ -31,7 +32,7 @@ public class StudentService {
      * 受講生詳細の一覧検索です。
      * 全件検索を行うので、条件指定は行いません。
      *
-     * @return　受講生詳細一覧(全件)
+     * @return 受講生詳細一覧(全件)
      */
 
     public List<StudentDetail> searchStudentList() {
@@ -44,15 +45,19 @@ public class StudentService {
      * 受講生詳細検索です。
      * IDに紐づく受講生情報を取得したあと、その受講生に紐づく受講生コース情報を取得して設定します。
      *
-     * @param Id　受講生ID
+     * @param studentId　受講生ID
      * @return 受講生詳細
      */
 
-    public StudentDetail searchStudent(String Id){
-        Student student = repository.searchStudent(Id);
+    public StudentDetail searchStudent(String studentId) {
+        Student student = repository.searchStudent(studentId);
         List<StudentCourse> studentCourse = repository.searchStudentCourse(student.getStudentId());
         return new StudentDetail(student, studentCourse);
+    }
 
+    //受講生IDに紐づくコース詳細の検索
+    public List<CourseDetail> searchCourseByStudentId(String courseId) {
+      return repository.searchCourseDetailsByStudentId(courseId);
     }
 
     /**
@@ -60,21 +65,20 @@ public class StudentService {
      * 受講生と受講生コース情報を個別に登録し、受講生コース情報には受講生情報を紐づける値とコース開始日、コース終了日を設定します。
      *
      * @param studentDetail　受講生詳細
-     * @return　登録情報を付与した受講生詳細
+     * @return 登録情報を付与した受講生詳細
      */
-
 
     @Transactional
     public StudentDetail registerStudent(StudentDetail studentDetail) {
-        Student student = studentDetail.getStudent();
+      final Student student = studentDetail.getStudent();
 
         repository.registerStudent(student);
+
         studentDetail.getStudentCourseList().forEach(studentCourse -> {
-            initStudentsCourse(studentCourse, student.getStudentId());
-            repository.registerStudentCourse(studentCourse);
+          initStudentsCourse(studentCourse, student.getStudentId());
+          repository.registerStudentCourse(studentCourse);
         });
         return studentDetail;
-
     }
 
     /**
@@ -85,12 +89,11 @@ public class StudentService {
      */
 
      void initStudentsCourse(StudentCourse studentCourse, String studentId) {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
 
         studentCourse.setStudentId(studentId);
         studentCourse.setStartDate(now);
-        studentCourse.setEndDate(now.plusYears(1));
-
+        studentCourse.setExpectedCompletionDate(now.plusYears(1));
     }
 
     /**
@@ -104,9 +107,5 @@ public class StudentService {
         repository.updateStudent(studentDetail.getStudent());
         studentDetail.getStudentCourseList()
                 .forEach(studentCourse -> repository.updateStudentCourse(studentCourse));
-    }
-
-    public StudentDetail getStudentDetailById(int studentId) {
-        return null;
     }
 }

@@ -1,31 +1,55 @@
 package raisetech.student.management.data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Schema(description = "受講生コース情報")
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 
 public class StudentCourse {
 
-    @Pattern(regexp = "^\\d+$", message = "数字のみ入力するようにしてください。")
     private String courseId;
 
-    @Pattern(regexp = "^\\d+$", message = "数字のみ入力するようにしてください。")
     private String studentId;
 
-    @NotBlank(message = "コース名は必須です")
+    @NotBlank
     private String courseName;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+
+    @NotNull
+    private LocalDate startDate;
+
+    @NotNull
+    private LocalDate expectedCompletionDate;
+
+    private ApplicationStatus status;
+
+    public StudentCourse(
+            String studentId,
+            String courseName,
+            LocalDate startDate,
+            LocalDate expectedCompletionDate
+    ) {
+        this.studentId = studentId;
+        this.courseName = courseName;
+        this.startDate = startDate;
+        this.expectedCompletionDate = expectedCompletionDate;
+    }
+
+    /** 引数付きコンストラクタ テスト専用(idあり) */
+    public StudentCourse(String courseId, String studentId, String courseName,
+                         LocalDate startDate, LocalDate expectedCompletionDate) {
+        this(studentId, courseName, startDate, expectedCompletionDate);
+        this.courseId = courseId;
+    }
+
+    /** JPA用にデフォルトコンストラクタ */
+    public StudentCourse() {}
+
 }
+
 
