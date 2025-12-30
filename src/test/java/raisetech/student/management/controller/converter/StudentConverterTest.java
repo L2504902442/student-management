@@ -1,6 +1,5 @@
 package raisetech.student.management.controller.converter;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import raisetech.student.management.data.Student;
@@ -78,5 +77,4 @@ class StudentConverterTest {
         student.setDeleted(false);
         return student;
     }
-
 }
