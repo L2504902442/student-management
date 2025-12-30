@@ -1,55 +1,38 @@
 package raisetech.student.management.data;
 
-import java.time.LocalDate;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-@Schema(description = "受講生コース情報")
+import java.time.LocalDateTime;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
 @Getter
 @Setter
-
 public class StudentCourse {
 
+
+    @Pattern(regexp = "\\d+", message = "数字のみ入力するようにしてください。")
     private String courseId;
 
+
+    @Pattern(regexp = "\\d+", message = "数字のみ入力するようにしてください。")
     private String studentId;
 
-    @NotBlank
+    @NotBlank(message = "必須入力です。")
     private String courseName;
 
-    @NotNull
-    private LocalDate startDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
-    @NotNull
-    private LocalDate expectedCompletionDate;
+    public StudentCourse() {}
 
-    private ApplicationStatus status;
-
-    public StudentCourse(
-            String studentId,
-            String courseName,
-            LocalDate startDate,
-            LocalDate expectedCompletionDate
-    ) {
+    public StudentCourse(String courseId, String studentId, String courseName,
+                         LocalDateTime startDate, LocalDateTime endDate) {
+        this.courseId = courseId;
         this.studentId = studentId;
         this.courseName = courseName;
         this.startDate = startDate;
-        this.expectedCompletionDate = expectedCompletionDate;
+        this.endDate = endDate;
     }
-
-    /** 引数付きコンストラクタ テスト専用(idあり) */
-    public StudentCourse(String courseId, String studentId, String courseName,
-                         LocalDate startDate, LocalDate expectedCompletionDate) {
-        this(studentId, courseName, startDate, expectedCompletionDate);
-        this.courseId = courseId;
-    }
-
-    /** JPA用にデフォルトコンストラクタ */
-    public StudentCourse() {}
-
 }
-
-

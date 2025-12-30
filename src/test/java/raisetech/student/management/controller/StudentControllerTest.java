@@ -10,22 +10,19 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.BDDAssertions.and;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.service.StudentService;
 
-import java.time.LocalDate;
-
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @WebMvcTest(StudentController.class)
@@ -54,7 +51,7 @@ class StudentControllerTest {
     Student student = new Student(id, "渡辺　恵子", "わたなべ　けいこ", "けいこ",
             "unique.user1937@example.com", "東京都", 30, "女", "特になし", false);
     StudentCourse studentCourse = new StudentCourse("100", id, "JAVAコース",
-            LocalDate.parse("2024-01-01"), LocalDate.parse("2024-04-01"));
+            LocalDateTime.parse("2024-01-01T00:00:00"), LocalDateTime.parse("2024-04-01T00:00:00"));
     StudentDetail studentDetail = new StudentDetail(student, List.of(studentCourse));
     when(service.searchStudent(id)).thenReturn(studentDetail);
     mockMvc.perform(get("/student/{id}", id))
@@ -62,24 +59,24 @@ class StudentControllerTest {
             .andExpect(content().json("""
             {
               "student":{
-                "id":"100",
-                "fullName":"渡辺　恵子",
-                "furigana":"わたなべ　けいこ",
+                "studentId":"100",
+                "name":"渡辺　恵子",
+                "kanaName":"わたなべ　けいこ",
                 "nickname":"けいこ",
-                "emailAddress":"unique.user1937@example.com",
+                "email":"unique.user1937@example.com",
                 "area":"東京都",
                 "age":30,
-                "sex":"女",
+                "gender":"女",
                 "remark":"特になし",
                 "deleted":false
               },
               "studentCourseList":[
                 {
-                  "id":"100",
+                  "courseId":"100",
                   "studentId":"100",
-                  "course":"JAVAコース",
-                  "startDate":"2024-01-01",
-                  "expectedCompletionDate":"2024-04-01"
+                  "courseName":"JAVAコース",
+                  "startDate":"2024-01-01T00:00:00",
+                  "endDate":"2024-04-01T00:00:00"
                 }
               ]
             }
@@ -90,7 +87,8 @@ class StudentControllerTest {
   @Test
   void 受講生コース詳細の検索ができて空で返ってくること() throws Exception {
     String id = "100";
-    mockMvc.perform(get("/course/{courseId}", id))
+
+   mockMvc.perform(get("/course/{courseId}", id))
             .andExpect(status().isOk());
 
     verify(service, times(1)).searchCourseByStudentId(id);
@@ -106,18 +104,17 @@ class StudentControllerTest {
                           "kanaName" : "イトウツヨシ",
                           "nickname" : "つよ",
                           "email" : "tsuyoshi@example.com",
-                          "area" : "東京都",
+                          "area" : "東京",
                           "age" : 37,
-                          "gender" : "男",
-                          "remark" : ""
-                       },
+                          "gender" : "男"
+                         },
                        "studentCourseList" : [
                        {
                           "courseName" : "Java基礎"
                        }
                       ]
-                     }        
-            """))
+                    }        
+                     """))
     .andExpect(status().isOk());
 
     verify(service, times(1)).registerStudent(any());
@@ -129,18 +126,20 @@ class StudentControllerTest {
             """
                     {
                        "student" : {
+                          "studentId" : "1",
                           "name" : "伊東 剛",
                           "kanaName" : "イトウツヨシ",
                           "nickname" : "つよ",
                           "email" : "tsuyoshi@example.com",
-                          "area" : "東京都",
+                          "area" : "東京",
                           "age" : 37,
-                          "gender" : "男",
-                          "remark" : ""
-                        },
+                          "gender" : "男"
+                         },
                         "studentCourseList" : [
                         {
-                           "courseName" : ""
+                           "courseId" : "1",
+                           "studentId" : "1",
+                           "courseName" : "Java基礎"
                         }
                        ]
                       }       
@@ -152,6 +151,17 @@ class StudentControllerTest {
   }
 
   @Test
+  void studentsで検索をした際適切なエラーメッセージが返ってくること() throws Exception {
+    mockMvc.perform(get("/students"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.error").value("Bad Request"))
+            .andExpect(jsonPath("$.message").value(
+                    "現在このAPIは利用できません。URLは「students」ではなく「studentList」を利用してください。"))
+            .andExpect(jsonPath("$.path").value("/students"));
+  }
+
+  @Test
   void 受講生詳細の受講生で適切な値を入力した時に入力チェックに異常が発生しないこと() {
     Student student = new Student();
     student.setStudentId("1");
@@ -160,6 +170,7 @@ class StudentControllerTest {
     student.setNickname("つよ");
     student.setEmail("tsuyoshi@example.com");
     student.setArea("東京都");
+    student.setAge(37);
     student.setGender("男");
 
     Set<ConstraintViolation<Student>> violations = validator.validate(student);
@@ -176,6 +187,7 @@ class StudentControllerTest {
     student.setNickname("つよ");
     student.setEmail("tsuyoshi@example.com");
     student.setArea("東京都");
+    student.setAge(37);
     student.setGender("男");
 
     Set<ConstraintViolation<Student>> violations = validator.validate(student);
@@ -202,14 +214,14 @@ class StudentControllerTest {
   void 受講生詳細の受講生コース情報でIDに数字以外を用いた時に入力チェックに異常が発生しないこと() {
     StudentCourse studentCourse = new StudentCourse();
     studentCourse.setCourseId("テストです。");
-    studentCourse.setStudentId("1");
+    studentCourse.setStudentId("abc");
     studentCourse.setCourseName("Java基礎");
     Set<ConstraintViolation<StudentCourse>> violations = validator.validate(studentCourse);
 
-    assertThat(violations.size()).isEqualTo(1);
+    assertThat(violations.size()).isEqualTo(2);
     assertThat(violations).extracting(v -> v.getPropertyPath().toString(),
             ConstraintViolation::getMessage)
-            .containsOnly(
+            .containsExactlyInAnyOrder(
                     tuple("courseId", "数字のみ入力するようにしてください。"),
                     tuple("studentId", "数字のみ入力するようにしてください。")
             );

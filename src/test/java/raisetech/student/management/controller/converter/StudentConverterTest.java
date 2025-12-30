@@ -6,7 +6,7 @@ import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,8 +28,8 @@ class StudentConverterTest {
       studentCourse.setCourseId("1");
       studentCourse.setStudentId("1");
       studentCourse.setCourseName("Java基礎");
-      studentCourse.setStartDate(LocalDate.now());
-      studentCourse.setExpectedCompletionDate(LocalDate.now().plusYears(1));
+      studentCourse.setStartDate(LocalDateTime.now());
+      studentCourse.setEndDate(LocalDateTime.now().plusYears(1));
 
       List<Student> studentList = List.of(student);
       List<StudentCourse> studentCourseList = List.of(studentCourse);
@@ -50,8 +50,8 @@ class StudentConverterTest {
     studentCourse.setCourseId("1");
     studentCourse.setStudentId("2");
     studentCourse.setCourseName("Java基礎");
-    studentCourse.setStartDate(LocalDate.now());
-    studentCourse.setExpectedCompletionDate(LocalDate.now().plusYears(1));
+    studentCourse.setStartDate(LocalDateTime.now());
+    studentCourse.setEndDate(LocalDateTime.now().plusYears(1));
 
     List<Student> studentList = List.of(student);
     List<StudentCourse> studentCourseList = List.of(studentCourse);

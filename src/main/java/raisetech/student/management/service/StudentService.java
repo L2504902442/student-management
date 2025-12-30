@@ -1,6 +1,6 @@
 package raisetech.student.management.service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import raisetech.student.management.repository.StudentRepository;
 @Service
 public class StudentService {
 
-    private  StudentRepository repository;
+    private StudentRepository repository;
     private StudentConverter converter;
 
     /**
@@ -75,7 +75,7 @@ public class StudentService {
         repository.registerStudent(student);
 
         studentDetail.getStudentCourseList().forEach(studentCourse -> {
-          initStudentsCourse(studentCourse, student.getStudentId());
+          initStudentCourse(studentCourse, student.getStudentId());
           repository.registerStudentCourse(studentCourse);
         });
         return studentDetail;
@@ -88,12 +88,12 @@ public class StudentService {
      * @param studentId　受講生
      */
 
-     void initStudentsCourse(StudentCourse studentCourse, String studentId) {
-        LocalDate now = LocalDate.now();
+     void initStudentCourse(StudentCourse studentCourse, String studentId) {
+        final LocalDateTime now = LocalDateTime.now();
 
         studentCourse.setStudentId(studentId);
         studentCourse.setStartDate(now);
-        studentCourse.setExpectedCompletionDate(now.plusYears(1));
+        studentCourse.setEndDate(now.plusYears(1));
     }
 
     /**
@@ -106,6 +106,6 @@ public class StudentService {
     public void updateStudent(StudentDetail studentDetail) {
         repository.updateStudent(studentDetail.getStudent());
         studentDetail.getStudentCourseList()
-                .forEach(studentCourse -> repository.updateStudentCourse(studentCourse));
+                .forEach(studentCourse ->repository.updateStudentCourse(studentCourse));
     }
 }

@@ -2,8 +2,12 @@ package raisetech.student.management.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -13,7 +17,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import raisetech.student.management.domain.CourseDetail;
 import raisetech.student.management.domain.StudentDetail;
-import raisetech.student.management.exception.TestException;
 import raisetech.student.management.service.StudentService;
 
 /**
@@ -23,7 +26,7 @@ import raisetech.student.management.service.StudentService;
 @RestController
 public class StudentController {
 
-    private final StudentService service;
+    private StudentService service;
 
     /**
      * コンストラクタ
@@ -51,9 +54,16 @@ public class StudentController {
      * 例外を発生させます。
      */
     @GetMapping("/students")
-    public List<StudentDetail> getStudents() throws TestException {
-        throw new TestException(
+    public ResponseEntity<Map<String, Object>> studentsNotAvailable(HttpServletRequest request) {
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", 400);
+        body.put("error", "Bad Request");
+        body.put("message",
                 "現在このAPIは利用できません。URLは「students」ではなく「studentList」を利用してください。");
+        body.put("path", request.getRequestURI());
+
+        return ResponseEntity.badRequest().body(body);
     }
 
     /**
@@ -77,9 +87,9 @@ public class StudentController {
     }
 
     //受講生IDによる受講コース詳細情報の検索
-    @GetMapping("/course/{id}")
-    public List<CourseDetail> getCourses(@PathVariable ("courseId") @NotBlank @Pattern(regexp = "^\\d+$") String id) {
-        return service.searchCourseByStudentId(id);
+    @GetMapping("/course/{studentId}")
+    public List<CourseDetail> searchCourse(@PathVariable @NotBlank @Pattern(regexp = "^\\d+$") String studentId) {
+        return service.searchCourseByStudentId(studentId);
     }
 
     /**
@@ -90,7 +100,8 @@ public class StudentController {
      */
     @Operation(summary = "受講生登録", description = "受講生を登録します。")
     @PostMapping("/registerStudent")
-    public ResponseEntity<StudentDetail> registerStudent(@RequestBody @Valid StudentDetail studentDetail) {
+    public ResponseEntity<StudentDetail> registerStudent(
+            @RequestBody @Valid StudentDetail studentDetail) {
         StudentDetail responseStudentDetail = service.registerStudent(studentDetail);
         return ResponseEntity.ok(responseStudentDetail);
     }

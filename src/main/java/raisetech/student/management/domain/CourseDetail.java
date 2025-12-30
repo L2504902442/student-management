@@ -1,6 +1,7 @@
 package raisetech.student.management.domain;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,11 +19,11 @@ public class CourseDetail {
 
     private String courseId;
 
-    private String course;
+    private String courseName;
 
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
-    private LocalDate expectedCompletionDate;
+    private LocalDateTime endDate;
 
     private int applicationStatusId;
 

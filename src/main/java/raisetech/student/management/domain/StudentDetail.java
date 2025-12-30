@@ -1,6 +1,7 @@
 package raisetech.student.management.domain;
 
 import java.util.List;
+import java.util.Objects;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
@@ -24,7 +25,22 @@ public class StudentDetail {
     @Valid
     private List<StudentCourse> studentCourseList;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof StudentDetail)) return false;
+        StudentDetail that = (StudentDetail) o;
+        return Objects.equals(student, that.student) &&
+                Objects.equals(studentCourseList, that.studentCourseList);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(student, studentCourseList);
+    }
 }
+
+
+
 
 
