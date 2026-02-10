@@ -1,46 +1,32 @@
 package raisetech.student.management.domain;
 
-import java.util.List;
-import java.util.Objects;
-
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 
-@Schema(description = "受講生詳細")
+import java.util.List;
+
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@EqualsAndHashCode
 public class StudentDetail {
 
+    @NotNull
     @Valid
     private Student student;
 
     @Valid
     private List<StudentCourse> studentCourseList;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof StudentDetail)) return false;
-        StudentDetail that = (StudentDetail) o;
-        return Objects.equals(student, that.student) &&
-                Objects.equals(studentCourseList, that.studentCourseList);
+    public StudentDetail() {
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(student, studentCourseList);
+    public StudentDetail(Student student, List<StudentCourse> studentCourseList) {
+        this.student = student;
+        this.studentCourseList = studentCourseList;
     }
 }
-
-
-
-
-

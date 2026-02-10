@@ -20,7 +20,7 @@ import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.service.StudentService;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -51,10 +51,10 @@ class StudentControllerTest {
     Student student = new Student(id, "渡辺　恵子", "わたなべ　けいこ", "けいこ",
             "unique.user1937@example.com", "東京都", 30, "女", "特になし", false);
     StudentCourse studentCourse = new StudentCourse("100", id, "JAVAコース",
-            LocalDateTime.parse("2024-01-01T00:00:00"), LocalDateTime.parse("2024-04-01T00:00:00"));
+            LocalDate.parse("2024-01-01"), LocalDate.parse("2024-04-01"));
     StudentDetail studentDetail = new StudentDetail(student, List.of(studentCourse));
     when(service.searchStudent(id)).thenReturn(studentDetail);
-    mockMvc.perform(get("/student/{id}", id))
+    mockMvc.perform(get("/student/{studentId}", id))
             .andExpect(status().isOk())
             .andExpect(content().json("""
             {
@@ -75,8 +75,8 @@ class StudentControllerTest {
                   "courseId":"100",
                   "studentId":"100",
                   "courseName":"JAVAコース",
-                  "startDate":"2024-01-01T00:00:00",
-                  "endDate":"2024-04-01T00:00:00"
+                  "startDate":"2024-01-01",
+                  "endDate":"2024-04-01"
                 }
               ]
             }

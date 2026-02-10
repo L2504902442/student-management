@@ -1,6 +1,6 @@
 package raisetech.student.management.service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -101,7 +101,7 @@ class StudentServiceTest {
       Student student = new Student();
       student.setStudentId(studentId);
       StudentCourse studentCourse = new StudentCourse();
-      LocalDateTime fixedNow = LocalDateTime.now();
+      LocalDate fixedNow = LocalDate.now();
 
       sut.initStudentCourse(studentCourse, student.getStudentId());
 
