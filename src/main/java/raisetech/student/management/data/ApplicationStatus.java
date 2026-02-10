@@ -1,17 +1,16 @@
 package raisetech.student.management.data;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 public class ApplicationStatus {
-
-  public int studentId;
-
+  private String id;
   private String courseId;
-
-  private String applicationStatus;
+  private String status;
 }

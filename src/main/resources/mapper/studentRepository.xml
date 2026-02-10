@@ -1,42 +1,54 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="raisetech.student.management.repository.StudentRepository">
 
-    <!-- 受講生の全件検索　-->
+    <!-- 受講生 全件検索 -->
     <select id="search" resultType="raisetech.student.management.data.Student">
-        SELECT * FROM students WHERE is_deleted = false
+        SELECT
+        student_id AS studentId,
+        name,
+        kana_name AS kanaName,
+        nickname,
+        email,
+        area,
+        age,
+        gender,
+        remark,
+        is_deleted AS deleted
+        FROM students
+        WHERE is_deleted = false
     </select>
 
-    <!-- 受講生の検索　-->
+    <!-- 受講生 ID検索 -->
     <select id="searchStudent" resultType="raisetech.student.management.data.Student">
-        SELECT * FROM students WHERE student_id = #{studentId};
+        SELECT
+        student_id AS studentId,
+        name,
+        kana_name AS kanaName,
+        nickname,
+        email,
+        area,
+        age,
+        gender,
+        remark,
+        is_deleted AS deleted
+        FROM students
+        WHERE student_id = #{studentId}
     </select>
 
-    <!--受講生コース情報の全件検索-->
-    <select id="searchStudentCourseList" resultType="raisetech.student.management.data.StudentCourse">
-        SELECT * FROM students_courses;
-    </select>
-    <!--受講生コース情報の検索-->
-    <select id="searchStudentCourse" resultType="raisetech.student.management.data.StudentCourse">
-        SELECT * FROM students_courses WHERE student_id = #{studentId};
-    </select>
-    <!--受講生の新規登録-->
-    <insert id="registerStudent" parameterType="raisetech.student.management.data.Student"
-            useGeneratedKeys="true" keyProperty="studentId">
-            INSERT INTO students (name, kana_name, nickname, email, area, age, gender, remark, is_deleted)
-            VALUES (#{name}, #{kanaName}, #{nickname}, #{email}, #{area}, #{age}, #{gender}, #{remark}, #{deleted})
+    <!-- 受講生 登録 -->
+    <insert id="registerStudent" useGeneratedKeys="true" keyProperty="studentId">
+        INSERT INTO students
+        (name, kana_name, nickname, email, area, age, gender, remark, is_deleted)
+        VALUES
+        (#{name}, #{kanaName}, #{nickname}, #{email}, #{area}, #{age}, #{gender}, #{remark}, #{deleted})
     </insert>
 
-    <!--受講生コース情報の新規登録-->
-    <insert id="registerStudentCourse" parameterType="raisetech.student.management.data.StudentCourse"
-            useGeneratedKeys="true" keyProperty="courseId">
-            INSERT INTO students_courses (student_id, course_name, start_date, end_date)
-            VALUES (#{studentId},#{courseName},#{startDate},#{endDate})
-    </insert>
-
-    <!--学生情報を更新する-->
-    <update id="updateStudent" parameterType="raisetech.student.management.data.Student">
+    <!-- 受講生 更新 -->
+    <update id="updateStudent">
         UPDATE students
         SET
         name = #{name},
@@ -47,15 +59,74 @@
         age = #{age},
         gender = #{gender},
         remark = #{remark},
-        is_deleted = #{isDeleted}
+        is_deleted = #{deleted}
         WHERE student_id = #{studentId}
     </update>
 
-    <!--受講生コース情報のコース名を更新-->
-    <update id="updateStudentCourse" parameterType="raisetech.student.management.data.StudentCourse">
-        UPDATE students_courses
-        SET course_name = #{courseName}
+    <!-- 受講生コース 全件 -->
+    <select id="searchStudentCourseList"
+            resultType="raisetech.student.management.data.StudentCourse">
+        SELECT
+        course_id AS courseId,
+        student_id AS studentId,
+        course_name AS courseName,
+        start_date AS startDate,
+        end_date AS endDate
+        FROM student_course
+    </select>
+
+    <!-- 受講生コース 学生ID検索 -->
+    <select id="searchStudentCourse"
+            resultType="raisetech.student.management.data.StudentCourse">
+        SELECT
+        course_id AS courseId,
+        student_id AS studentId,
+        course_name AS courseName,
+        start_date AS startDate,
+        end_date AS endDate
+        FROM student_course
+        WHERE student_id = #{studentId}
+    </select>
+
+    <!-- 受講生コース 登録 -->
+    <insert id="registerStudentCourse" useGeneratedKeys="true" keyProperty="courseId">
+        INSERT INTO student_course
+        (student_id, course_name, start_date, end_date)
+        VALUES
+        (#{studentId}, #{courseName}, #{startDate}, #{endDate})
+    </insert>
+
+    <!-- 受講生コース 更新 -->
+    <update id="updateStudentCourse">
+        UPDATE student_course
+        SET
+        course_name = #{courseName},
+        start_date = #{startDate},
+        end_date = #{endDate}
         WHERE course_id = #{courseId}
     </update>
+
+    <insert id="registerApplicationStatus">
+        MERGE INTO application_status AS aps
+        USING (VALUES (#{courseId}, #{status})) AS vals(course_id, status)
+        ON aps.course_id = vals.course_id
+        WHEN MATCHED THEN
+        UPDATE SET aps.status = vals.status
+        WHEN NOT MATCHED THEN
+        INSERT (course_id, status)
+        VALUES (vals.course_id, vals.status)
+    </insert>
+    <!-- コース詳細（申込状況含む） -->
+    <select id="searchCourseDetailsByStudentId"
+            resultType="raisetech.student.management.domain.CourseDetail">
+        SELECT
+        sc.course_id AS courseId,
+        sc.course_name AS courseName,
+        aps.status AS applicationStatus
+        FROM student_course sc
+        LEFT JOIN application_status aps
+        ON sc.course_id = aps.course_id
+        WHERE sc.student_id = #{studentId}
+    </select>
 
 </mapper>

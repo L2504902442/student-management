@@ -1,8 +1,8 @@
 package raisetech.student.management.service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import raisetech.student.management.controller.converter.StudentConverter;
@@ -15,97 +15,72 @@ import raisetech.student.management.repository.StudentRepository;
 @Service
 public class StudentService {
 
-    private StudentRepository repository;
-    private StudentConverter converter;
+    private final StudentRepository repository;
+    private final StudentConverter converter;
 
-    /**
-     * 受講生情報を取り扱うサービスです。
-     * 受講生の検索や登録・更新処理を行います。
-     */
-    @Autowired
     public StudentService(StudentRepository repository, StudentConverter converter) {
         this.repository = repository;
         this.converter = converter;
     }
 
-    /**
-     * 受講生詳細の一覧検索です。
-     * 全件検索を行うので、条件指定は行いません。
-     *
-     * @return 受講生詳細一覧(全件)
-     */
-
     public List<StudentDetail> searchStudentList() {
-        List<Student> studentList = repository.search();
-        List<StudentCourse> studentCourseList = repository.searchStudentCourseList();
-        return converter.convertStudentDetails(studentList, studentCourseList);
+        return converter.convertStudentDetails(
+                repository.search(),
+                repository.searchStudentCourseList()
+        );
     }
-
-    /**
-     * 受講生詳細検索です。
-     * IDに紐づく受講生情報を取得したあと、その受講生に紐づく受講生コース情報を取得して設定します。
-     *
-     * @param studentId　受講生ID
-     * @return 受講生詳細
-     */
 
     public StudentDetail searchStudent(String studentId) {
         Student student = repository.searchStudent(studentId);
-        List<StudentCourse> studentCourse = repository.searchStudentCourse(student.getStudentId());
-        return new StudentDetail(student, studentCourse);
+        if (student == null) return null;
+
+        return new StudentDetail(
+                student,
+                repository.searchStudentCourse(studentId)
+        );
     }
 
-    //受講生IDに紐づくコース詳細の検索
-    public List<CourseDetail> searchCourseByStudentId(String courseId) {
-      return repository.searchCourseDetailsByStudentId(courseId);
+    public List<CourseDetail> searchCourseByStudentId(String studentId) {
+        return repository.searchCourseDetailsByStudentId(studentId);
     }
-
-    /**
-     * 受講生詳細の登録を行います。
-     * 受講生と受講生コース情報を個別に登録し、受講生コース情報には受講生情報を紐づける値とコース開始日、コース終了日を設定します。
-     *
-     * @param studentDetail　受講生詳細
-     * @return 登録情報を付与した受講生詳細
-     */
 
     @Transactional
     public StudentDetail registerStudent(StudentDetail studentDetail) {
-      final Student student = studentDetail.getStudent();
+        Student student = studentDetail.getStudent();
+        if (student.getDeleted() == null) {
+            student.setDeleted(false);
+        }
 
         repository.registerStudent(student);
 
-        studentDetail.getStudentCourseList().forEach(studentCourse -> {
-          initStudentCourse(studentCourse, student.getStudentId());
-          repository.registerStudentCourse(studentCourse);
-        });
+        if (studentDetail.getStudentCourseList() != null) {
+            studentDetail.getStudentCourseList().forEach(course -> {
+                initStudentCourse(course, String.valueOf(student.getStudentId()));
+                repository.registerStudentCourse(course);
+            });
+        }
         return studentDetail;
     }
 
-    /**
-     * 受講生コース情報を登録する際の初期情報を設定する。
-     *
-     * @param studentCourse　受講生コース情報
-     * @param studentId　受講生
-     */
-
-     void initStudentCourse(StudentCourse studentCourse, String studentId) {
-        final LocalDateTime now = LocalDateTime.now();
-
-        studentCourse.setStudentId(studentId);
-        studentCourse.setStartDate(now);
-        studentCourse.setEndDate(now.plusYears(1));
+    void initStudentCourse(StudentCourse course, String studentId) {
+        LocalDate now = LocalDate.now();
+        course.setStudentId(studentId);
+        course.setStartDate(now);
+        course.setEndDate(now.plusYears(1));
     }
-
-    /**
-     * 受講生詳細の更新を行います。　受講生と受講生コース情報をそれぞれ更新します。
-     *
-     * @param studentDetail　受講生詳細
-     */
 
     @Transactional
     public void updateStudent(StudentDetail studentDetail) {
+
+        if (studentDetail.getStudent().getDeleted() == null) {
+            studentDetail.getStudent().setDeleted(false);
+        }
         repository.updateStudent(studentDetail.getStudent());
-        studentDetail.getStudentCourseList()
-                .forEach(studentCourse ->repository.updateStudentCourse(studentCourse));
+
+        if (studentDetail.getStudentCourseList() != null) {
+            studentDetail.getStudentCourseList()
+                    .forEach(repository::updateStudentCourse);
+        }
+
     }
 }
