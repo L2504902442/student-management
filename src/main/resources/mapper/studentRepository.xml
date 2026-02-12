@@ -71,7 +71,8 @@
         student_id AS studentId,
         course_name AS courseName,
         start_date AS startDate,
-        end_date AS endDate
+        end_date AS endDate,
+        application_status AS applicationStatus
         FROM student_course
     </select>
 
@@ -83,7 +84,8 @@
         student_id AS studentId,
         course_name AS courseName,
         start_date AS startDate,
-        end_date AS endDate
+        end_date AS endDate,
+        application_status AS applicationStatus
         FROM student_course
         WHERE student_id = #{studentId}
     </select>
@@ -102,7 +104,8 @@
         SET
         course_name = #{courseName},
         start_date = #{startDate},
-        end_date = #{endDate}
+        end_date = #{endDate},
+        application_status = #{applicationStatus}
         WHERE course_id = #{courseId}
     </update>
 
@@ -122,10 +125,8 @@
         SELECT
         sc.course_id AS courseId,
         sc.course_name AS courseName,
-        aps.status AS applicationStatus
+        sc.application_status AS applicationStatus
         FROM student_course sc
-        LEFT JOIN application_status aps
-        ON sc.course_id = aps.course_id
         WHERE sc.student_id = #{studentId}
     </select>
 

@@ -23,4 +23,6 @@ public class StudentCourse {
     private String courseName;
     private LocalDate startDate;
     private LocalDate endDate;
+
+    private String applicationStatus;
 }
