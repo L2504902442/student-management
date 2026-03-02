@@ -1,37 +1,41 @@
 package raisetech.student.management.data;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Student {
-
-    @Pattern(regexp = "^\\d+$", message = "数字のみ入力するようにしてください。")
-    private String studentId;
-
-    @NotBlank
+    private Integer studentId;
     private String name;
-
-    @NotBlank
     private String kanaName;
-
     private String nickname;
-
-    @NotBlank
-    @Email(message = "正しいメールアドレス形式で入力してください。")
     private String email;
-
     private String area;
     private Integer age;
     private String gender;
-    private String remark;
-    private Boolean deleted;
+    private Boolean isDeleted;
+
+    // ----- getter / setter -----
+    public Integer getStudentId() { return studentId; }
+    public void setStudentId(Integer studentId) { this.studentId = studentId; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getKanaName() { return kanaName; }
+    public void setKanaName(String kanaName) { this.kanaName = kanaName; }
+
+    public String getNickname() { return nickname; }
+    public void setNickname(String nickname) { this.nickname = nickname; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getArea() { return area; }
+    public void setArea(String area) { this.area = area; }
+
+    public Integer getAge() { return age; }
+    public void setAge(Integer age) { this.age = age; }
+
+    public String getGender() { return gender; }
+    public void setGender(String gender) { this.gender = gender; }
+
+    public Boolean getIsDeleted() { return isDeleted; }
+    public void setIsDeleted(Boolean isDeleted) { this.isDeleted = isDeleted; }
 }

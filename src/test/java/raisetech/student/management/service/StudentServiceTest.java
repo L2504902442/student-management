@@ -26,7 +26,7 @@ class StudentServiceTest {
     private StudentRepository repository;
 
     @Mock
-    private StudentConverter converter;
+    private raisetech.student.management.converter.StudentConverter converter;
 
     private StudentService sut;
 

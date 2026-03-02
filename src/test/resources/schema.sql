@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS application_status;
-DROP TABLE IF EXISTS student_course;
+DROP TABLE IF EXISTS students_courses;
 DROP TABLE IF EXISTS students;
 
 CREATE TABLE students (
@@ -15,7 +15,7 @@ CREATE TABLE students (
     is_deleted BOOLEAN DEFAULT FALSE
 );
 
-CREATE TABLE student_course (
+CREATE TABLE students_courses (
     course_id INT PRIMARY KEY AUTO_INCREMENT,
     student_id INT NOT NULL,
     course_name VARCHAR(100) NOT NULL,
@@ -27,5 +27,5 @@ CREATE TABLE student_course (
 CREATE TABLE application_status (
     course_id INT PRIMARY KEY,
     status VARCHAR(50) NOT NULL,
-    FOREIGN KEY (course_id) REFERENCES student_course(course_id)
+    FOREIGN KEY (course_id) REFERENCES students_courses(course_id)
 );
