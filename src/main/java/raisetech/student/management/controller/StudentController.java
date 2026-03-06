@@ -1,24 +1,21 @@
 package raisetech.student.management.controller;
 
-import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import raisetech.student.management.data.Student;
-import raisetech.student.management.service.StudentService;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import raisetech.student.management.data.Student;
+import raisetech.student.management.domain.StudentSearchCondition;
+import raisetech.student.management.service.StudentService;
 
 @RestController
-@RequestMapping("/studentList")
 public class StudentController {
 
     @Autowired
-    private StudentService studentService;
+    private StudentService service;
 
-    @GetMapping
-    public List<Student> getStudentList(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String area,
-            @RequestParam(required = false) Boolean isDeleted
-    ) {
-        return studentService.searchStudentList(name, area, isDeleted);
+    @GetMapping("/studentList")
+    public List<Student> searchStudentList(StudentSearchCondition condition) {
+        return service.searchStudentList(condition);
     }
 }
