@@ -6,15 +6,25 @@
 
 <mapper namespace="raisetech.student.management.repository.StudentRepository">
 
+    <!-- 受講生検索 -->
     <select id="searchStudentList"
             parameterType="raisetech.student.management.domain.StudentSearchCondition"
             resultType="raisetech.student.management.data.Student">
 
-        SELECT *
+        SELECT
+        student_id,
+        name,
+        kana_name,
+        nickname,
+        email,
+        area,
+        age,
+        gender,
+        remark,
+        is_deleted
         FROM students
 
         <where>
-
             <if test="name != null and name != ''">
                 AND name LIKE CONCAT('%', #{name}, '%')
             </if>
@@ -28,7 +38,7 @@
             </if>
 
             <if test="email != null and email != ''">
-                AND email = #{email}
+                AND email LIKE CONCAT('%', #{email}, '%')
             </if>
 
             <if test="area != null and area != ''">
@@ -42,8 +52,25 @@
             <if test="isDeleted != null">
                 AND is_deleted = #{isDeleted}
             </if>
-
         </where>
+
+        ORDER BY student_id
+
+    </select>
+
+    <!-- 受講生コースリスト -->
+    <select id="searchStudentCourseList"
+            resultType="raisetech.student.management.data.StudentCourse">
+
+        SELECT
+        course_id,
+        student_id,
+        course_name,
+        start_date,
+        end_date
+        FROM student_courses
+
+        ORDER BY student_id, course_id
 
     </select>
 

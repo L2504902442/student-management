@@ -1,21 +1,22 @@
 package raisetech.student.management.controller;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import raisetech.student.management.data.Student;
+import org.springframework.web.bind.annotation.*;
+import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.domain.StudentSearchCondition;
 import raisetech.student.management.service.StudentService;
 
+import java.util.List;
+
 @RestController
+@RequestMapping("/studentList")
 public class StudentController {
 
     @Autowired
     private StudentService service;
 
-    @GetMapping("/studentList")
-    public List<Student> searchStudentList(StudentSearchCondition condition) {
+    @GetMapping
+    public List<StudentDetail> searchStudentList(StudentSearchCondition condition) {
         return service.searchStudentList(condition);
     }
 }

@@ -15,60 +15,60 @@ public class Student {
         return studentId;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public Boolean getIsDeleted() {
-        return isDeleted;
-    }
-
     public void setStudentId(String studentId) {
         this.studentId = studentId;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
+    public String getArea() {
+        return area;
+    }
+
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public Integer getAge() {
+        return age;
     }
 
     public void setAge(Integer age) {
         this.age = age;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public Boolean getIsDeleted() {
+        return isDeleted;
     }
 
     public void setIsDeleted(Boolean isDeleted) {
