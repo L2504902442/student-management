@@ -3,66 +3,61 @@ package raisetech.student.management.domain;
 public class StudentSearchCondition {
 
     private String name;
-    private String nickname;
+    private String area;
     private String gender;
     private String email;
-    private String area;
+    private String nickname;
+
+    // ⭐ これが今回の原因
     private Integer age;
-    private Boolean isDeleted;
+
+    // --- getter / setter ---
 
     public String getName() {
         return name;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public Boolean getIsDeleted() {
-        return isDeleted;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public String getArea() {
+        return area;
     }
 
     public void setArea(String area) {
         this.area = area;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public String getGender() {
+        return gender;
     }
 
-    public void setIsDeleted(Boolean isDeleted) {
-        this.isDeleted = isDeleted;
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 }

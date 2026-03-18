@@ -11,19 +11,19 @@ public class StudentDetail {
 
     private List<StudentCourse> studentCourseList;
 
-    public Student getStudent() {
-        return student;
-    }
+        public Student getStudent() {
+            return student;
+        }
 
-    public List<StudentCourse> getStudentCourseList() {
-        return studentCourseList;
-    }
+        public List<StudentCourse> getStudentCourseList() {
+            return studentCourseList;
+        }
 
-    public void setStudent(Student student) {
-        this.student = student;
-    }
+        public void setStudent(Student student) {
+            this.student = student;
+        }
 
-    public void setStudentCourseList(List<StudentCourse> studentCourseList) {
-        this.studentCourseList = studentCourseList;
+        public void setStudentCourseList(List<StudentCourse> studentCourseList) {
+            this.studentCourseList = studentCourseList;
+        }
     }
-}

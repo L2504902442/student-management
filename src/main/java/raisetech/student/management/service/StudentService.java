@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import raisetech.student.management.controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
-import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.domain.StudentSearchCondition;
 import raisetech.student.management.repository.StudentRepository;
 
@@ -20,11 +19,9 @@ public class StudentService {
     @Autowired
     private StudentConverter converter;
 
-    public List<StudentDetail> searchStudentList(StudentSearchCondition condition) {
-
+    public List<Student> searchStudentList(StudentSearchCondition condition) {
         List<Student> studentList = repository.searchStudentList(condition);
         List<StudentCourse> courseList = repository.searchStudentCourseList();
-
         return converter.convertStudentDetails(studentList, courseList);
     }
 }
