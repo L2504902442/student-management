@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="raisetech.student.management.repository.StudentRepository">
+
+    <!-- ===================== -->
+    <!-- 受講生検索 -->
+    <!-- ===================== -->
+    <select id="searchStudentList"
+            parameterType="raisetech.student.management.domain.StudentSearchCondition"
+            resultType="raisetech.student.management.data.Student">
+
+        SELECT
+        student_id,
+        name,
+        kana_name,
+        nickname,
+        email,
+        area,
+        age,
+        gender,
+        remark,
+        is_deleted
+        FROM students
+        WHERE is_deleted = 0
+
+        <if test="name != null and name != ''">
+            AND name LIKE CONCAT('%', #{name}, '%')
+        </if>
+
+        <if test="area != null and area != ''">
+            AND area = #{area}
+        </if>
+
+        <if test="gender != null and gender != ''">
+            AND gender = #{gender}
+        </if>
+
+        <if test="email != null and email != ''">
+            AND email = #{email}
+        </if>
+
+        <if test="nickname != null and nickname != ''">
+            AND nickname LIKE CONCAT('%', #{nickname}, '%')
+        </if>
+
+        <if test="age != null">
+            AND age = #{age}
+        </if>
+
+    </select>
+
+
+    <!-- ===================== -->
+    <!-- コース一覧取得（ステータス付き） -->
+    <!-- ===================== -->
+    <select id="searchStudentCourseList"
+            resultType="raisetech.student.management.data.StudentCourse">
+
+        SELECT
+        sc.course_id,
+        sc.student_id,
+        sc.course_name,
+        sc.start_date,
+        sc.end_date,
+        crs.registration_status
+        FROM students_courses sc
+        LEFT JOIN course_registration_status crs
+        ON sc.course_id = crs.student_course_id
+
+    </select>
+
+</mapper>

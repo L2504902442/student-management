@@ -1,30 +1,29 @@
 package raisetech.student.management.domain;
 
-import java.util.List;
-
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 
-@Schema(description = "受講生詳細")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+import java.util.List;
+
 public class StudentDetail {
 
-    @Valid
     private Student student;
 
-    @Valid
     private List<StudentCourse> studentCourseList;
 
+        public Student getStudent() {
+            return student;
+        }
 
-}
+        public List<StudentCourse> getStudentCourseList() {
+            return studentCourseList;
+        }
 
+        public void setStudent(Student student) {
+            this.student = student;
+        }
 
+        public void setStudentCourseList(List<StudentCourse> studentCourseList) {
+            this.studentCourseList = studentCourseList;
+        }
+    }
